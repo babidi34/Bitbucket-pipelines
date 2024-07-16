@@ -27,7 +27,6 @@ pipelines:
 
 definitions:
   caches:
-    docker: /var/lib/docker
     pip: /root/.cache/pip
 
 variables:
