@@ -11,6 +11,7 @@ pipelines:
         caches:
           - pip
         script:
+          - export GIT_REPO=https://$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD@bitbucket.org/$BITBUCKET_REPO_FULL_NAME
           - apk update && apk add --no-cache openssh-client sshpass git
           - pip install --no-cache-dir ansible
           - mkdir -p ~/.ssh
@@ -26,10 +27,3 @@ pipelines:
 definitions:
   caches:
     pip: /root/.cache/pip
-
-variables:
-  PROJECT_DIR: /var/www/webapp
-  GIT_REPO: $BITBUCKET_GIT_HTTP_ORIGIN
-  GIT_BRANCH: "master"
-  COMMAND_ENDING: echo "Ceci est un test"
-#  COMMAND_ENDING: "composer install --no-interaction --no-scripts && npm install && npm run build && php artisan migrate"
