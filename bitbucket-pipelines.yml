@@ -11,6 +11,7 @@ pipelines:
         caches:
           - pip
         script:
+          - export GIT_BRANCH=$BITBUCKET_BRANCH
           - export GIT_REPO=https://$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD@bitbucket.org/$BITBUCKET_REPO_FULL_NAME
           - apk update && apk add --no-cache openssh-client sshpass git
           - pip install --no-cache-dir ansible

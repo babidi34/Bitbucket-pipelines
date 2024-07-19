@@ -29,11 +29,11 @@ Accédez aux paramètres de votre dépôt Bitbucket et définissez les variables
 - **SSH_PRIVATE_KEY_BASE64** : Clé privée SSH encodée en Base64.
 - **SSH_USER** : Nom d'utilisateur SSH pour la connexion.
 - **PROJECT_DIR** : Répertoire du projet sur le serveur (ex: /var/www/webapp).
-- **GIT_REPO** : URL du dépôt Git.
-- **GIT_BRANCH** : Branche Git à utiliser (ex: master).
 - **COMMAND_ENDING** : Commande à exécuter après le déploiement (ex: "composer install --no-interaction --no-scripts && npm install && npm run build && php artisan migrate").
 - **BITBUCKET_USERNAME** : Ton nom d'utilisateur Bitbucket.
 - **BITBUCKET_APP_PASSWORD** : Mot de passe d'application pour l'accès au dépôt.
+- **ENV_FILE_CONTENT_BASE64** : Contenu en base64 de .env.
+- **BECOME** : "true" pour qu'Ansible utilise le sudo.
 
 #### 2. Générer un Mot de Passe d'Application Bitbucket
 
@@ -45,7 +45,7 @@ Pour générer un mot de passe d'application Bitbucket :
 4. Donnez un nom au mot de passe et sélectionnez les permissions nécessaires pour lire les dépôts (`Read`).
 5. Cliquez sur **Create** et copiez le mot de passe généré. Utilisez ce mot de passe comme valeur de la variable `BITBUCKET_APP_PASSWORD` dans Bitbucket.
 
-#### 3. Encoder la Clé Privée en Base64
+#### 3. Encoder la Clé Privée SSH et le .env en Base64
 
 Sur votre machine locale, encodez votre clé privée SSH en Base64 :
 
@@ -55,6 +55,14 @@ base64 -w 0 < ~/.ssh/id_rsa
 
 
 Copiez la sortie et définissez-la comme valeur de la variable `SSH_PRIVATE_KEY_BASE64` dans Bitbucket.
+
+Sur votre machine locale, encodez votre fichier .env en Base64 :
+
+```bash
+base64 -w 0 < /chemin-projet/.env
+```
+
+Copiez la sortie et définissez-la comme valeur de la variable `ENV_FILE_CONTENT_BASE654` dans Bitbucket.
 
 #### 4. Placer le Fichier `bitbucket-pipelines.yml` dans le Dépôt
 
