@@ -17,6 +17,11 @@ Ce document explique comment configurer les variables d'environnement nécessair
    - `COMMAND_ENDING`
    - `BITBUCKET_USERNAME`
    - `BITBUCKET_APP_PASSWORD`
+4. Préparation des serveurs de destination :
+   - Projet déployé.
+   - Utilisateur bitbucket-ci créé.
+   - Clé autorisée pour l'utilisateur bitbucket-ci.
+   - Droits sudo pour l'utilisateur bitbucket-ci.
 
 ### Étapes de Configuration
 
