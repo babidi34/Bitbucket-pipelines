@@ -6,26 +6,35 @@ Ce document explique comment configurer les variables d'environnement nécessair
 
 1. Un dépôt Bitbucket configuré.
 2. Accès SSH configuré et fonctionnel sur les serveurs de destination.
-3. Les variables d'environnement suivantes doivent être définies dans Bitbucket :
-   - `SSH_HOSTS`
-   - `SSH_PORT`
-   - `SSH_PRIVATE_KEY_BASE64`
-   - `SSH_USER`
-   - `PROJECT_DIR`
-   - `GIT_REPO`
-   - `GIT_BRANCH`
-   - `COMMAND_ENDING`
-   - `BITBUCKET_USERNAME`
-   - `BITBUCKET_APP_PASSWORD`
-4. Préparation des serveurs de destination :
+3. Préparation des serveurs de destination :
    - Projet déployé.
-   - Utilisateur bitbucket-ci créé.
+   - Utilisateur bitbucket-ci créé avec des droits pour lire et écrire dans le dossier du projet.
    - Clé autorisée pour l'utilisateur bitbucket-ci.
-   - Droits sudo pour l'utilisateur bitbucket-ci.
 
 ### Étapes de Configuration
 
-#### 1. Définir les Variables d'Environnement dans Bitbucket
+#### 1. Générer un Access Token Bitbucket
+
+Pour générer un token Bitbucket :
+
+1. Accédez aux paramètres de votre dépôt Bitbucket : https://bitbucket.org/account/settings/
+2. Sous **Sécurité**, cliquez sur **Access Token**.
+3. Cliquez sur **Create Repository Access Token**.
+4. Donnez un nom à l'Access Token et sélectionnez les permissions nécessaires pour lire les dépôts (`Read` dans Repositories).
+5. Une fois le token créé, Bitbucket fournit une URL dans la partie "How to use this token with your Git repository". Prenez uniquement l'URL (sans le 'git clone') et utilisez-la comme valeur de la variable `BITBUCKET_ACCESS_TOKEN` dans Bitbucket.
+
+#### 2. Encoder la Clé Privée SSH
+
+Sur votre machine locale, encodez votre clé privée SSH en Base64 :
+
+```bash
+base64 -w 0 < ~/.ssh/chemin_de_la_clé
+```
+
+
+Copiez la sortie et définissez-la comme valeur de la variable `SSH_PRIVATE_KEY_BASE64` dans Bitbucket.
+
+#### 3. Définir les Variables d'Environnement dans Bitbucket
 
 Accédez aux paramètres de votre dépôt Bitbucket et définissez les variables d'environnement suivantes sous **Repository settings > Pipelines > Repository variables** :
 
@@ -35,39 +44,9 @@ Accédez aux paramètres de votre dépôt Bitbucket et définissez les variables
 - **SSH_USER** : Nom d'utilisateur SSH pour la connexion.
 - **PROJECT_DIR** : Répertoire du projet sur le serveur (ex: /var/www/webapp).
 - **COMMAND_ENDING** : Commande à exécuter après le déploiement (ex: "composer install --no-interaction --no-scripts && npm install && npm run build && php artisan migrate").
-- **BITBUCKET_USERNAME** : Ton nom d'utilisateur Bitbucket.
-- **BITBUCKET_APP_PASSWORD** : Mot de passe d'application pour l'accès au dépôt.
-- **ENV_FILE_CONTENT_BASE64** : Contenu en base64 de .env.
 - **BECOME** : "true" pour qu'Ansible utilise le sudo.
-
-#### 2. Générer un Mot de Passe d'Application Bitbucket
-
-Pour générer un mot de passe d'application Bitbucket :
-
-1. Accédez aux paramètres de votre compte Bitbucket : https://bitbucket.org/account/settings/
-2. Sous **Access management**, cliquez sur **App passwords**.
-3. Créez un nouvel App password en cliquant sur **Create app password**.
-4. Donnez un nom au mot de passe et sélectionnez les permissions nécessaires pour lire les dépôts (`Read`).
-5. Cliquez sur **Create** et copiez le mot de passe généré. Utilisez ce mot de passe comme valeur de la variable `BITBUCKET_APP_PASSWORD` dans Bitbucket.
-
-#### 3. Encoder la Clé Privée SSH et le .env en Base64
-
-Sur votre machine locale, encodez votre clé privée SSH en Base64 :
-
-```bash
-base64 -w 0 < ~/.ssh/id_rsa
-```
-
-
-Copiez la sortie et définissez-la comme valeur de la variable `SSH_PRIVATE_KEY_BASE64` dans Bitbucket.
-
-Sur votre machine locale, encodez votre fichier .env en Base64 :
-
-```bash
-base64 -w 0 < /chemin-projet/.env
-```
-
-Copiez la sortie et définissez-la comme valeur de la variable `ENV_FILE_CONTENT_BASE654` dans Bitbucket.
+- **GIT_REPO** : URL git avec le token (fourni lors de la création du token).
+- **ANSIBLE_EXECUTABLE** : (optionnel) chemin vers le shell qui doit être utilisé par ansible.
 
 #### 4. Placer le Fichier `bitbucket-pipelines.yml` dans le Dépôt
 
