@@ -36,17 +36,22 @@ Copiez la sortie et définissez-la comme valeur de la variable `SSH_PRIVATE_KEY_
 
 #### 3. Définir les Variables d'Environnement dans Bitbucket
 
-Accédez aux paramètres de votre dépôt Bitbucket et définissez les variables d'environnement suivantes sous **Repository settings > Pipelines > Repository variables** :
+Accédez aux paramètres de votre dépôt Bitbucket et définissez les variables d'environnement globale suivantes sous **Repository settings > Pipelines > Repository variables** :
+
+
+- **COMMAND_ENDING** : Commande à exécuter après le déploiement (ex: "composer install --no-interaction --no-scripts && npm install && npm run build && php artisan migrate").
+- **BECOME** : "true" pour qu'Ansible utilise le sudo (si pas de droit sudo alors la valeur doit être "false").
+- **GIT_REPO** : URL git avec le token (fourni lors de la création du token).
+- **ANSIBLE_EXECUTABLE** : (optionnel) chemin vers le shell qui doit être utilisé par ansible.
+
+Maintenant il faut définir les variables suivantes pour chacun des environnements sous **Repository settings > Pipelines > Deployments** :
 
 - **SSH_HOSTS** : Adresse(s) IP ou nom(s) de domaine des serveurs de destination.
 - **SSH_PORT** : Port SSH des serveurs de destination (ex: 22, 2227, etc.).
-- **SSH_PRIVATE_KEY_BASE64** : Clé privée SSH encodée en Base64.
+- **SSH_PRIVATE_KEY_BASE64** : Clé privée SSH encodée en Base64. (Si vous utilisez la même clé SSH sur vos différents serveurs alors vous pouvez créer cette variable dans la partie **Repository variables**)
 - **SSH_USER** : Nom d'utilisateur SSH pour la connexion.
 - **PROJECT_DIR** : Répertoire du projet sur le serveur (ex: /var/www/webapp).
-- **COMMAND_ENDING** : Commande à exécuter après le déploiement (ex: "composer install --no-interaction --no-scripts && npm install && npm run build && php artisan migrate").
-- **BECOME** : "true" pour qu'Ansible utilise le sudo.
-- **GIT_REPO** : URL git avec le token (fourni lors de la création du token).
-- **ANSIBLE_EXECUTABLE** : (optionnel) chemin vers le shell qui doit être utilisé par ansible.
+
 
 #### 4. Placer le Fichier `bitbucket-pipelines.yml` dans le Dépôt
 
