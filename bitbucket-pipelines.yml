@@ -1,18 +1,19 @@
 image: docker:24.0.4-git
-
 options:
   docker: true
 
-pipelines:
-  default:
-    - step:
+definitions:
+  steps:
+    - step: &deploy
+        runs-on:
+          - self.hosted
+          - linux
         name: Deploy
         image: python:3.9-alpine
         caches:
-          - pip
+          - /root/.cache/pip
         script:
           - export GIT_BRANCH=$BITBUCKET_BRANCH
-          - export GIT_REPO=https://$BITBUCKET_USERNAME:$BITBUCKET_APP_PASSWORD@bitbucket.org/$BITBUCKET_REPO_FULL_NAME
           - apk update && apk add --no-cache openssh-client sshpass git
           - pip install --no-cache-dir ansible
           - mkdir -p ~/.ssh
@@ -25,6 +26,15 @@ pipelines:
           - echo $SSH_HOSTS >> inventory
           - echo "$SSH_HOSTS ansible_ssh_user=$SSH_USER ansible_ssh_private_key_file=~/.ssh/private_key ansible_ssh_port=$SSH_PORT" >> inventory
           - ansible-playbook -i inventory update-webapp.yml --ssh-extra-args='-o StrictHostKeyChecking=no'
-definitions:
-  caches:
-    pip: /root/.cache/pip
+
+pipelines:
+  branches:
+    develop:
+      - step: 
+          <<: *deploy
+          deployment: develop
+    production:
+      - step: 
+          <<: *deploy
+          deployment: production
+
