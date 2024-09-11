@@ -66,6 +66,8 @@ Assurez-vous que les serveurs de destination sont configurés pour accepter les 
 1. Ajouter la clé publique correspondante à la clé privée utilisée dans `~/.ssh/authorized_keys` sur chaque serveur.
 2. Vérifier que les serveurs sont accessibles via le port SSH configuré (`SSH_PORT`).
 
+**Note** : Si ces configurations ont déjà été effectuées par le passé, cette étape n'est pas nécessaire.
+
 ### Conclusion
 
 Avec ces configurations, votre pipeline Bitbucket sera prêt à exécuter des déploiements CI/CD via SSH sur les serveurs configurés. Assurez-vous que les serveurs sont correctement configurés pour accepter les connexions SSH afin que le processus de déploiement se déroule sans problème.
