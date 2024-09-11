@@ -34,6 +34,8 @@ base64 -w 0 < ~/.ssh/chemin_de_la_clé
 
 Copiez la sortie et définissez-la comme valeur de la variable `SSH_PRIVATE_KEY_BASE64` dans Bitbucket.
 
+**Note : Il est fortement recommandé de stocker cette clé privée encodée en Base64 dans un gestionnaire de mots de passe sécurisé tel que Vault, Bitwarden ou tout autre outil de gestion de secrets afin de pouvoir la réutiliser pour d'autres pipelines.**
+
 #### 3. Définir les Variables d'Environnement dans Bitbucket
 
 Accédez aux paramètres de votre dépôt Bitbucket et définissez les variables d'environnement globale suivantes sous **Repository settings > Pipelines > Repository variables** :
