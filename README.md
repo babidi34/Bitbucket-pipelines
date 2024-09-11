@@ -21,7 +21,7 @@ Pour générer un token Bitbucket :
 2. Sous **Sécurité**, cliquez sur **Access Token**.
 3. Cliquez sur **Create Repository Access Token**.
 4. Donnez un nom à l'Access Token et sélectionnez les permissions nécessaires pour lire les dépôts (`Read` dans Repositories).
-5. Une fois le token créé, Bitbucket fournit une URL dans la partie "How to use this token with your Git repository". Prenez uniquement l'URL (sans le 'git clone') et utilisez-la comme valeur de la variable `BITBUCKET_ACCESS_TOKEN` dans Bitbucket.
+5. Une fois le token créé, Bitbucket fournit une URL dans la partie "How to use this token with your Git repository". Prenez uniquement l'URL (sans le 'git clone') et utilisez-la comme valeur de la variable `GIT_REPO` dans Bitbucket.
 
 #### 2. Encoder la Clé Privée SSH
 
