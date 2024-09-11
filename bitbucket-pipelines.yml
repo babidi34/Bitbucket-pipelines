@@ -13,7 +13,7 @@ definitions:
         caches:
           - /root/.cache/pip
         script:
-          - export GIT_BRANCH=$BITBUCKET_BRANCH
+          - export GIT_BRANCH=${GIT_BRANCH:-$BITBUCKET_BRANCH}
           - apk update && apk add --no-cache openssh-client sshpass git
           - pip install --no-cache-dir ansible
           - mkdir -p ~/.ssh
