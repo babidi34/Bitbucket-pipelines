@@ -1,8 +1,8 @@
-### README pour Configuration CI/CD avec Bitbucket Pipelines
+# README pour Configuration CI/CD avec Bitbucket Pipelines
 
 Ce document explique comment configurer les variables d'environnement nécessaires dans Bitbucket, placer le fichier `bitbucket-pipelines.yml` dans le dépôt, et préparer les serveurs pour recevoir des connexions SSH pour CI/CD.
 
-#### Prérequis
+## Prérequis
 
 1. Un dépôt Bitbucket configuré.
 2. Accès SSH configuré et fonctionnel sur les serveurs de destination.
@@ -11,9 +11,9 @@ Ce document explique comment configurer les variables d'environnement nécessair
    - Utilisateur bitbucket-ci créé avec des droits pour lire et écrire dans le dossier du projet.
    - Clé autorisée pour l'utilisateur bitbucket-ci.
 
-### Étapes de Configuration
+## Étapes de Configuration
 
-#### 1. Générer un Access Token Bitbucket
+### 1. Générer un Access Token Bitbucket
 
 Pour générer un token Bitbucket :
 
@@ -23,7 +23,7 @@ Pour générer un token Bitbucket :
 4. Donnez un nom à l'Access Token et sélectionnez les permissions nécessaires pour lire les dépôts (`Read` dans Repositories).
 5. Une fois le token créé, Bitbucket fournit une URL dans la partie "How to use this token with your Git repository". Prenez uniquement l'URL (sans le 'git clone') et utilisez-la comme valeur de la variable `GIT_REPO` dans Bitbucket.
 
-#### 2. Encoder la Clé Privée SSH
+### 2. Encoder la Clé Privée SSH
 
 Sur votre machine locale, encodez votre clé privée SSH en Base64 :
 
@@ -55,7 +55,7 @@ Maintenant il faut définir les variables suivantes pour chacun des environnemen
 - **PROJECT_DIR** : Répertoire du projet sur le serveur (ex: /var/www/webapp).
 
 
-#### 4. Placer le Fichier `bitbucket-pipelines.yml` dans le Dépôt
+### 4. Placer le Fichier `bitbucket-pipelines.yml` dans le Dépôt
 
 Ajoutez le fichier `bitbucket-pipelines.yml` à la racine de votre dépôt.
 
@@ -68,8 +68,33 @@ Assurez-vous que les serveurs de destination sont configurés pour accepter les 
 
 **Note** : Si ces configurations ont déjà été effectuées par le passé, cette étape n'est pas nécessaire.
 
-### Conclusion
+## Conclusion
 
 Avec ces configurations, votre pipeline Bitbucket sera prêt à exécuter des déploiements CI/CD via SSH sur les serveurs configurés. Assurez-vous que les serveurs sont correctement configurés pour accepter les connexions SSH afin que le processus de déploiement se déroule sans problème.
 
 Si vous rencontrez des problèmes ou avez des questions, veuillez consulter la documentation de Bitbucket Pipelines ou contacter votre administrateur système.
+
+
+## Procédure de rollback via Bitbucket Pipelines
+
+### Étapes à suivre :
+
+1. **Créer une branche à partir du commit cible :**
+   - Identifiez le commit sur lequel vous souhaitez revenir.
+   - Créez une nouvelle branche sur ce commit, par exemple : `git checkout -b rollback-branch <commit_id>`.
+
+2. **Pousser la branche nouvellement créée :**
+   - Poussez la nouvelle branche sur le dépôt distant :  
+     `git push origin rollback-branch`.
+
+3. **Modifier la variable GIT_BRANCH dans Bitbucket :**
+   - Accédez à Bitbucket, ouvrez les **paramètres de l'environnement** concerné.
+   - Créez ou modifiez la variable `GIT_BRANCH`, et définissez comme valeur le nom de la branche nouvellement créée (`rollback-branch`).
+
+4. **Exécuter le pipeline manuellement :**
+   - Allez dans la section **Pipelines** du dépôt.
+   - Lancez manuellement l'exécution du pipeline sur l'environnement en question.
+
+---
+
+Suivre ces étapes permet de revenir à un état antérieur de l'application.
